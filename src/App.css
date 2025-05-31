@@ -1,38 +1,84 @@
 .App {
-  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.app-header {
+  background-color: #a23b72;
   color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.App-link {
-  color: #61dafb;
+.app-header h1 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.app-header h3 {
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+.main-content {
+  min-height: 75vh;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.app-footer {
+  background-color: #333;
+  color: #f9f9f9;
+}
+
+.food-card {
+  transition: all 0.3s ease;
+  height: 100%;
+  cursor: pointer;
+}
+
+.food-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.food-card.selected {
+  border: 2px solid #a23b72;
+  box-shadow: 0 5px 15px rgba(162, 59, 114, 0.3);
+}
+
+.food-image {
+  height: 150px;
+  object-fit: cover;
+}
+
+.step-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nutrition-alert {
+  margin-top: 1rem;
+  border-left: 4px solid #a23b72;
+}
+
+.btn-primary {
+  background-color: #a23b72;
+  border-color: #a23b72;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #8a325f;
+  border-color: #8a325f;
+}
+
+.nutrition-progress .progress-bar {
+  background-color: #a23b72;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #a23b72;
+  box-shadow: 0 0 0 0.25rem rgba(162, 59, 114, 0.25);
 }
