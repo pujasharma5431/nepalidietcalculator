@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Container } from 'react-bootstrap';
+import { Container, Dropdown, Button } from 'react-bootstrap';
 import UserProfile from './components/UserProfile';
 import MealPlanner from './components/MealPlanner';
 import DietSummary from './components/DietSummary';
+import translations from './data/translations';
 
 function App() {
+  const [language, setLanguage] = useState('english');
+  const t = translations[language];
+
   const [userProfile, setUserProfile] = useState({
     height: '',
     weight: '',
@@ -57,15 +61,28 @@ function App() {
     <div className="App">
       <Container fluid className="p-0">
         <div className="app-header text-center py-4">
-          <h1>नेपाली खाना योजनाकार</h1>
-          <h3>Nepali Diet Calculator</h3>
+          <div className="language-selector-container">
+            <Dropdown className="language-selector">
+              <Dropdown.Toggle variant="light" id="dropdown-language">
+                {t.language}: {language === 'english' ? t.languageEn : t.languageNe}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setLanguage('english')}>{translations.english.languageEn}</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLanguage('nepali')}>{translations.nepali.languageNe}</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          <h1>{t.appTitle}</h1>
+          <h3>{t.appSubtitle}</h3>
         </div>
         
         <Container className="main-content my-4">
           {currentStep === 'profile' && (
             <UserProfile 
               userProfile={userProfile} 
-              onSubmit={handleProfileSubmit} 
+              onSubmit={handleProfileSubmit}
+              language={language}
+              translations={t}
             />
           )}
           
@@ -74,6 +91,8 @@ function App() {
               userProfile={userProfile}
               mealPlan={mealPlan}
               onSubmit={handleMealSubmit}
+              language={language}
+              translations={t}
             />
           )}
           
@@ -82,12 +101,14 @@ function App() {
               userProfile={userProfile}
               mealPlan={mealPlan}
               onReset={resetApp}
+              language={language}
+              translations={t}
             />
           )}
         </Container>
         
         <footer className="app-footer text-center py-3">
-          <p>© 2025 नेपाली खाना योजनाकार | Nepali Diet Calculator</p>
+          <p>{t.footer}</p>
         </footer>
       </Container>
     </div>

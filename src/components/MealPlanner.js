@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Row, Col, Button, Form, Badge, Accordion, Alert } from 'react-bootstrap';
 import foodData from '../data/foodData';
 
-const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
+const MealPlanner = ({ userProfile, mealPlan, onSubmit, translations }) => {
   const [selectedMeals, setSelectedMeals] = useState({
     breakfast: [...mealPlan.breakfast],
     lunch: [...mealPlan.lunch],
@@ -145,44 +145,45 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
 
   return (
     <div className="step-container">
-      <h2 className="mb-4 text-center">Meal Planning</h2>
+      <h2 className="mb-4 text-center">{translations.mealPlannerTitle}</h2>
+      <p className="text-center mb-4">{translations.mealPlannerSubtitle}</p>
       
       <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mb-4">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>Add Custom Food</Accordion.Header>
+          <Accordion.Header>{translations.addCustomFood}</Accordion.Header>
           <Accordion.Body>
             {showSuccessAlert && (
               <Alert variant="success" className="mb-3">
-                <strong>{lastAddedFood}</strong> has been added to your {newCustomFood.mealType} menu. You can add more custom foods or continue with your meal planning.
+                <strong>{lastAddedFood}</strong> {translations.customFoodAdded}
               </Alert>
             )}
             <Form onSubmit={addCustomFood}>
               <Row className="mb-3">
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Food Name</Form.Label>
+                    <Form.Label>{translations.foodName}</Form.Label>
                     <Form.Control
                       type="text"
                       name="name"
                       value={newCustomFood.name}
                       onChange={handleCustomFoodChange}
-                      placeholder="E.g., Homemade Dhido"
+                      placeholder={translations.foodName}
                       required
                     />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Meal Type</Form.Label>
+                    <Form.Label>{translations.mealType}</Form.Label>
                     <Form.Select
                       name="mealType"
                       value={newCustomFood.mealType}
                       onChange={handleCustomFoodChange}
                     >
-                      <option value="breakfast">Breakfast</option>
-                      <option value="lunch">Lunch</option>
-                      <option value="snacks">Snacks</option>
-                      <option value="dinner">Dinner</option>
+                      <option value="breakfast">{translations.breakfast}</option>
+                      <option value="lunch">{translations.lunch}</option>
+                      <option value="snacks">{translations.snacks}</option>
+                      <option value="dinner">{translations.dinner}</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -191,26 +192,26 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
               <Row className="mb-3">
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Calories (per serving)</Form.Label>
+                    <Form.Label>{translations.calories}</Form.Label>
                     <Form.Control
                       type="number"
                       name="calories"
                       value={newCustomFood.calories}
                       onChange={handleCustomFoodChange}
-                      placeholder="E.g., 200"
+                      placeholder="200"
                       required
                     />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Serving Size</Form.Label>
+                    <Form.Label>{translations.servingSize}</Form.Label>
                     <Form.Control
                       type="text"
                       name="servingSize"
                       value={newCustomFood.servingSize}
                       onChange={handleCustomFoodChange}
-                      placeholder="E.g., 1 cup"
+                      placeholder={translations.servingSize}
                     />
                   </Form.Group>
                 </Col>
@@ -219,37 +220,37 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
               <Row className="mb-3">
                 <Col md={4}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Protein (g)</Form.Label>
+                    <Form.Label>{translations.protein}</Form.Label>
                     <Form.Control
                       type="number"
                       name="protein"
                       value={newCustomFood.protein}
                       onChange={handleCustomFoodChange}
-                      placeholder="E.g., 5"
+                      placeholder="5"
                     />
                   </Form.Group>
                 </Col>
                 <Col md={4}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Carbs (g)</Form.Label>
+                    <Form.Label>{translations.carbs}</Form.Label>
                     <Form.Control
                       type="number"
                       name="carbs"
                       value={newCustomFood.carbs}
                       onChange={handleCustomFoodChange}
-                      placeholder="E.g., 30"
+                      placeholder="30"
                     />
                   </Form.Group>
                 </Col>
                 <Col md={4}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Fat (g)</Form.Label>
+                    <Form.Label>{translations.fat}</Form.Label>
                     <Form.Control
                       type="number"
                       name="fat"
                       value={newCustomFood.fat}
                       onChange={handleCustomFoodChange}
-                      placeholder="E.g., 2"
+                      placeholder="2"
                     />
                   </Form.Group>
                 </Col>
@@ -258,7 +259,7 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
               <Row>
                 <Col>
                   <Button variant="primary" type="submit" className="me-2">
-                    Add Custom Food
+                    {translations.addCustomFood}
                   </Button>
                 </Col>
               </Row>
@@ -270,7 +271,7 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
       {/* Meal sections */}
       {['breakfast', 'lunch', 'snacks', 'dinner'].map((mealType) => (
         <div key={mealType} className="mb-5">
-          <h3 className="mb-3 text-capitalize">{mealType}</h3>
+          <h3 className="mb-3 text-capitalize">{translations[mealType]}</h3>
           
           <Row xs={1} md={2} lg={3} className="g-4 mb-4">
             {/* Standard food options */}
@@ -348,7 +349,7 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
                   setActiveKey('0');
                 }}
               >
-                + Add New Custom {mealType} Item
+                {translations.addNewCustomItem}
               </Button>
               {selectedMeals[mealType].map(food => (
                 <div key={food.id} className="d-flex align-items-center mb-2">
@@ -356,7 +357,7 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
                     <strong>{food.name}</strong> - {food.calories} cal/{food.servingSize}
                   </div>
                   <div className="d-flex align-items-center">
-                    <Form.Label className="me-2 mb-0">Qty:</Form.Label>
+                    <Form.Label className="me-2 mb-0">{translations.quantity}:</Form.Label>
                     <Form.Control
                       type="number"
                       min="1"
@@ -370,7 +371,7 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
                       className="ms-2"
                       onClick={() => toggleFoodSelection(mealType, food)}
                     >
-                      Remove
+                      {translations.reset}
                     </Button>
                   </div>
                 </div>
@@ -387,7 +388,7 @@ const MealPlanner = ({ userProfile, mealPlan, onSubmit }) => {
           onClick={handleSubmit}
           disabled={Object.values(selectedMeals).every(meal => meal.length === 0)}
         >
-          Calculate Diet Summary
+          {translations.calculateDietSummary}
         </Button>
       </div>
     </div>

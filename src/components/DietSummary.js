@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Row, Col, Button, Alert, Table, ProgressBar } from 'react-bootstrap';
 
-const DietSummary = ({ userProfile, mealPlan, onReset }) => {
+const DietSummary = ({ userProfile, mealPlan, onReset, translations }) => {
   const [nutritionSummary, setNutritionSummary] = useState({
     totalCalories: 0,
     totalProtein: 0,
@@ -121,21 +121,22 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     
     // Check if total calories meet daily needs
     const caloriePercentage = (nutrition.totalCalories / dailyNeeds) * 100;
+    const roundedPercentage = Math.round(caloriePercentage);
     
     if (caloriePercentage < 85) {
       recs.push({
         type: 'warning',
-        message: `Your current diet provides only ${Math.round(caloriePercentage)}% of your daily calorie needs. Consider adding more food to meet your energy requirements.`
+        message: translations.lowCalorieWarning.replace('{percentage}', roundedPercentage)
       });
     } else if (caloriePercentage > 115) {
       recs.push({
         type: 'warning',
-        message: `Your current diet provides ${Math.round(caloriePercentage)}% of your daily calorie needs, which exceeds your requirements. Consider reducing portion sizes.`
+        message: translations.highCalorieWarning.replace('{percentage}', roundedPercentage)
       });
     } else {
       recs.push({
         type: 'success',
-        message: `Your current diet provides ${Math.round(caloriePercentage)}% of your daily calorie needs, which is within a healthy range.`
+        message: translations.healthyCalorieMessage.replace('{percentage}', roundedPercentage)
       });
     }
     
@@ -144,23 +145,26 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     if (nutrition.totalProtein < minProtein) {
       recs.push({
         type: 'warning',
-        message: `Your diet is low in protein (${Math.round(nutrition.totalProtein)}g vs. recommended ${Math.round(minProtein)}g). Consider adding more protein-rich foods like lentils, beans, yogurt, or lean meats.`
+        message: translations.lowProteinWarning
+          .replace('{current}', Math.round(nutrition.totalProtein))
+          .replace('{recommended}', Math.round(minProtein))
       });
     }
     
     // Carbs recommendations (45-65% of total calories)
     const carbCalories = nutrition.totalCarbs * 4; // 4 calories per gram of carbs
     const carbPercentage = (carbCalories / nutrition.totalCalories) * 100;
+    const roundedCarbPercentage = Math.round(carbPercentage);
     
     if (carbPercentage < 45) {
       recs.push({
         type: 'info',
-        message: `Your diet is relatively low in carbohydrates (${Math.round(carbPercentage)}% of calories). Consider adding more whole grains, fruits, or starchy vegetables.`
+        message: translations.lowCarbsMessage.replace('{percentage}', roundedCarbPercentage)
       });
     } else if (carbPercentage > 65) {
       recs.push({
         type: 'info',
-        message: `Your diet is high in carbohydrates (${Math.round(carbPercentage)}% of calories). Consider balancing with more proteins and healthy fats.`
+        message: translations.highCarbsMessage.replace('{percentage}', roundedCarbPercentage)
       });
     }
     
@@ -169,7 +173,9 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     if (nutrition.totalFiber < recommendedFiber) {
       recs.push({
         type: 'info',
-        message: `Your diet provides ${Math.round(nutrition.totalFiber)}g of fiber, which is below the recommended ${recommendedFiber}g. Consider adding more fruits, vegetables, and whole grains.`
+        message: translations.lowFiberMessage
+          .replace('{current}', Math.round(nutrition.totalFiber))
+          .replace('{recommended}', recommendedFiber)
       });
     }
     
@@ -177,7 +183,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     if (nutrition.meals.breakfast && nutrition.meals.breakfast.calories < 0.2 * dailyNeeds) {
       recs.push({
         type: 'info',
-        message: 'Your breakfast is relatively light. Consider adding more nutrient-dense foods to start your day.'
+        message: translations.lightBreakfastMessage
       });
     }
     
@@ -189,14 +195,14 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
         if (lowercaseMed.includes('metformin') || lowercaseMed.includes('insulin')) {
           recs.push({
             type: 'warning',
-            message: 'Based on your medications, you may need to monitor your carbohydrate intake carefully. Consider consulting with a healthcare provider for personalized advice.'
+            message: translations.diabetesMedicationAdvice
           });
         }
         
         if (lowercaseMed.includes('statin') || lowercaseMed.includes('lipitor')) {
           recs.push({
             type: 'info',
-            message: 'Based on your medications, focus on heart-healthy foods like oats, beans, and fatty fish while limiting saturated fats.'
+            message: translations.cholesterolMedicationAdvice
           });
         }
       });
@@ -239,58 +245,58 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
   
   return (
     <div className="step-container">
-      <h2 className="mb-4 text-center">Diet Summary</h2>
+      <h2 className="mb-4 text-center">{translations.dietSummaryTitle}</h2>
       
       <Card className="mb-4">
         <Card.Body>
           <Row>
             <Col md={6}>
-              <h4>Your Profile</h4>
+              <h4>{translations.yourProfile}</h4>
               <Table bordered hover>
                 <tbody>
                   <tr>
-                    <td>Height</td>
+                    <td>{translations.height}</td>
                     <td>{userProfile.height} cm</td>
                   </tr>
                   <tr>
-                    <td>Weight</td>
+                    <td>{translations.weight}</td>
                     <td>{userProfile.weight} kg</td>
                   </tr>
                   <tr>
-                    <td>Age</td>
-                    <td>{userProfile.age} years</td>
+                    <td>{translations.age}</td>
+                    <td>{userProfile.age} {translations.years}</td>
                   </tr>
                   <tr>
-                    <td>Gender</td>
-                    <td className="text-capitalize">{userProfile.gender}</td>
+                    <td>{translations.gender}</td>
+                    <td className="text-capitalize">{translations[userProfile.gender]}</td>
                   </tr>
                   <tr>
-                    <td>Activity Level</td>
-                    <td className="text-capitalize">{userProfile.activityLevel.replace('_', ' ')}</td>
+                    <td>{translations.activityLevel}</td>
+                    <td className="text-capitalize">{translations[userProfile.activityLevel]}</td>
                   </tr>
                   <tr>
-                    <td>Medications</td>
+                    <td>{translations.medications}</td>
                     <td>
                       {userProfile.medications.length > 0 
                         ? userProfile.medications.join(', ') 
-                        : 'None reported'}
+                        : translations.noneReported}
                     </td>
                   </tr>
                 </tbody>
               </Table>
             </Col>
             <Col md={6}>
-              <h4>Daily Calorie Needs</h4>
+              <h4>{translations.dailyCalorieNeeds}</h4>
               <div className="p-3 bg-light rounded">
-                <h2 className="text-center">{dailyCalorieNeeds} calories</h2>
-                <p className="text-center text-muted">Based on your profile information</p>
+                <h2 className="text-center">{dailyCalorieNeeds} {translations.calories}</h2>
+                <p className="text-center text-muted">{translations.basedOnProfile}</p>
               </div>
               
-              <h4 className="mt-4">Current Intake</h4>
+              <h4 className="mt-4">{translations.currentIntake}</h4>
               <div className="p-3 bg-light rounded">
-                <h2 className="text-center">{nutritionSummary.totalCalories} calories</h2>
+                <h2 className="text-center">{nutritionSummary.totalCalories} {translations.calories}</h2>
                 <p className="text-center text-muted">
-                  {Math.round((nutritionSummary.totalCalories / dailyCalorieNeeds) * 100)}% of your daily needs
+                  {Math.round((nutritionSummary.totalCalories / dailyCalorieNeeds) * 100)}% {translations.ofDailyNeeds}
                 </p>
                 
                 <div className="nutrition-progress">
@@ -304,34 +310,34 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
       
       <Card className="mb-4">
         <Card.Body>
-          <h4>Macro Nutrient Breakdown</h4>
+          <h4>{translations.macroNutrientBreakdown}</h4>
           <Row>
             <Col md={4}>
               <div className="text-center p-3">
-                <h5>Protein</h5>
+                <h5>{translations.protein}</h5>
                 <h3>{nutritionSummary.totalProtein}g</h3>
                 <p className="text-muted">
-                  {calculateMacroPercentage('protein', nutritionSummary.totalCalories)}% of calories
+                  {calculateMacroPercentage('protein', nutritionSummary.totalCalories)}% {translations.ofCalories}
                 </p>
                 <ProgressBar now={calculateMacroPercentage('protein', nutritionSummary.totalCalories)} />
               </div>
             </Col>
             <Col md={4}>
               <div className="text-center p-3">
-                <h5>Carbohydrates</h5>
+                <h5>{translations.carbs}</h5>
                 <h3>{nutritionSummary.totalCarbs}g</h3>
                 <p className="text-muted">
-                  {calculateMacroPercentage('carbs', nutritionSummary.totalCalories)}% of calories
+                  {calculateMacroPercentage('carbs', nutritionSummary.totalCalories)}% {translations.ofCalories}
                 </p>
                 <ProgressBar now={calculateMacroPercentage('carbs', nutritionSummary.totalCalories)} />
               </div>
             </Col>
             <Col md={4}>
               <div className="text-center p-3">
-                <h5>Fat</h5>
+                <h5>{translations.fat}</h5>
                 <h3>{nutritionSummary.totalFat}g</h3>
                 <p className="text-muted">
-                  {calculateMacroPercentage('fat', nutritionSummary.totalCalories)}% of calories
+                  {calculateMacroPercentage('fat', nutritionSummary.totalCalories)}% {translations.ofCalories}
                 </p>
                 <ProgressBar now={calculateMacroPercentage('fat', nutritionSummary.totalCalories)} />
               </div>
@@ -342,21 +348,21 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
       
       <Card className="mb-4">
         <Card.Body>
-          <h4>Meal Breakdown</h4>
+          <h4>{translations.mealBreakdown}</h4>
           <Table bordered hover>
             <thead>
               <tr>
-                <th>Meal</th>
-                <th>Calories</th>
-                <th>Protein</th>
-                <th>Carbs</th>
-                <th>Fat</th>
+                <th>{translations.meal}</th>
+                <th>{translations.calories}</th>
+                <th>{translations.protein}</th>
+                <th>{translations.carbs}</th>
+                <th>{translations.fat}</th>
               </tr>
             </thead>
             <tbody>
               {Object.keys(nutritionSummary.meals).map(mealType => (
                 <tr key={mealType}>
-                  <td className="text-capitalize">{mealType}</td>
+                  <td className="text-capitalize">{translations[mealType]}</td>
                   <td>{nutritionSummary.meals[mealType].calories} cal</td>
                   <td>{nutritionSummary.meals[mealType].protein}g</td>
                   <td>{nutritionSummary.meals[mealType].carbs}g</td>
@@ -364,7 +370,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
                 </tr>
               ))}
               <tr className="table-secondary">
-                <td><strong>Total</strong></td>
+                <td><strong>{translations.total}</strong></td>
                 <td><strong>{nutritionSummary.totalCalories} cal</strong></td>
                 <td><strong>{nutritionSummary.totalProtein}g</strong></td>
                 <td><strong>{nutritionSummary.totalCarbs}g</strong></td>
@@ -377,7 +383,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
       
       <Card className="mb-4">
         <Card.Body>
-          <h4>Recommendations</h4>
+          <h4>{translations.recommendations}</h4>
           {recommendations.map((rec, index) => (
             <Alert key={index} variant={rec.type} className="nutrition-alert">
               {rec.message}
@@ -388,7 +394,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
       
       <div className="d-grid gap-2 mt-4">
         <Button variant="primary" size="lg" onClick={onReset}>
-          Start Over
+          {translations.startOver}
         </Button>
       </div>
     </div>

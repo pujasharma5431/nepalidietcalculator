@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Card, Accordion } from 'react-bootstrap';
 
-const UserProfile = ({ userProfile, onSubmit }) => {
+const UserProfile = ({ userProfile, onSubmit, translations }) => {
   const [profile, setProfile] = useState({
     ...userProfile,
     dailyRoutine: userProfile.dailyRoutine || {
@@ -57,33 +57,34 @@ const UserProfile = ({ userProfile, onSubmit }) => {
 
   return (
     <div className="step-container">
-      <h2 className="mb-4 text-center">Personal Information</h2>
+      <h2 className="mb-4 text-center">{translations.profileTitle}</h2>
+      <p className="text-center mb-4">{translations.profileSubtitle}</p>
       <Card className="p-4 mb-4">
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group className="mb-3" controlId="height">
-                <Form.Label>Height (cm)</Form.Label>
+                <Form.Label>{translations.height}</Form.Label>
                 <Form.Control 
                   type="number" 
                   name="height"
                   value={profile.height} 
                   onChange={handleChange}
                   required
-                  placeholder="Enter your height in centimeters"
+                  placeholder={translations.height}
                 />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group className="mb-3" controlId="weight">
-                <Form.Label>Weight (kg)</Form.Label>
+                <Form.Label>{translations.weight}</Form.Label>
                 <Form.Control 
                   type="number" 
                   name="weight"
                   value={profile.weight} 
                   onChange={handleChange}
                   required
-                  placeholder="Enter your weight in kilograms"
+                  placeholder={translations.weight}
                 />
               </Form.Group>
             </Col>
@@ -92,28 +93,28 @@ const UserProfile = ({ userProfile, onSubmit }) => {
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group className="mb-3" controlId="age">
-                <Form.Label>Age</Form.Label>
+                <Form.Label>{translations.age}</Form.Label>
                 <Form.Control 
                   type="number" 
                   name="age"
                   value={profile.age} 
                   onChange={handleChange}
                   required
-                  placeholder="Enter your age"
+                  placeholder={translations.age}
                 />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group className="mb-3" controlId="gender">
-                <Form.Label>Gender</Form.Label>
+                <Form.Label>{translations.gender}</Form.Label>
                 <Form.Select 
                   name="gender"
                   value={profile.gender} 
                   onChange={handleChange}
                   required
                 >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="male">{translations.male}</option>
+                  <option value="female">{translations.female}</option>
                   <option value="other">Other</option>
                 </Form.Select>
               </Form.Group>
@@ -121,29 +122,29 @@ const UserProfile = ({ userProfile, onSubmit }) => {
           </Row>
 
           <Form.Group className="mb-3" controlId="activityLevel">
-            <Form.Label>Activity Level</Form.Label>
+            <Form.Label>{translations.activityLevel}</Form.Label>
             <Form.Select 
               name="activityLevel"
               value={profile.activityLevel} 
               onChange={handleChange}
               required
             >
-              <option value="sedentary">Sedentary (little or no exercise)</option>
-              <option value="light">Lightly active (light exercise 1-3 days/week)</option>
-              <option value="moderate">Moderately active (moderate exercise 3-5 days/week)</option>
-              <option value="active">Active (hard exercise 6-7 days/week)</option>
-              <option value="very_active">Very active (very hard exercise, physical job or training twice a day)</option>
+              <option value="sedentary">{translations.sedentary}</option>
+              <option value="light">{translations.light}</option>
+              <option value="moderate">{translations.moderate}</option>
+              <option value="active">{translations.active}</option>
+              <option value="very_active">{translations.veryActive}</option>
             </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="medications">
-            <Form.Label>Medications (comma separated)</Form.Label>
+            <Form.Label>{translations.medications}</Form.Label>
             <Form.Control 
               as="textarea" 
               rows={2}
               value={medications} 
               onChange={(e) => setMedications(e.target.value)}
-              placeholder="Enter any medications you're taking (e.g., Metformin, Insulin, etc.)"
+              placeholder={translations.medications}
             />
             <Form.Text className="text-muted">
               This information will help us provide better dietary recommendations.
@@ -284,7 +285,7 @@ const UserProfile = ({ userProfile, onSubmit }) => {
 
           <div className="d-grid gap-2 mt-4">
             <Button variant="primary" type="submit" size="lg">
-              Continue to Meal Planning
+              {translations.next}
             </Button>
           </div>
         </Form>
