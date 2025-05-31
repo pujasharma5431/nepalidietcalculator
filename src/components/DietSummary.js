@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Row, Col, Button, Alert, Table, ProgressBar } from 'react-bootstrap';
 
 const DietSummary = ({ userProfile, mealPlan, onReset }) => {
@@ -33,7 +33,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
   };
   
   // Calculate daily calorie needs based on BMR and activity level
-  const calculateDailyCalorieNeeds = () => {
+  const calculateDailyCalorieNeeds = useCallback(() => {
     const bmr = calculateBMR();
     const { activityLevel } = userProfile;
     
@@ -60,10 +60,10 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     }
     
     return Math.round(bmr * activityMultiplier);
-  };
+  }, [userProfile, calculateBMR]);
   
   // Calculate all nutrition totals
-  const calculateNutrition = () => {
+  const calculateNutrition = useCallback(() => {
     const mealSummary = {};
     let totalCals = 0;
     let totalProtein = 0;
@@ -113,10 +113,10 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
       totalFiber,
       meals: mealSummary
     };
-  };
+  }, [mealPlan]);
   
   // Generate diet recommendations based on nutrition analysis
-  const generateRecommendations = (nutrition, dailyNeeds) => {
+  const generateRecommendations = useCallback((nutrition, dailyNeeds) => {
     const recs = [];
     
     // Check if total calories meet daily needs
@@ -203,7 +203,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     }
     
     return recs;
-  };
+  }, [userProfile]);
   
   useEffect(() => {
     const calculatedNeeds = calculateDailyCalorieNeeds();
