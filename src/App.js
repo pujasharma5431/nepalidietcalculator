@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import UserProfile from './components/UserProfile';
 import MealPlanner from './components/MealPlanner';
 import DietSummary from './components/DietSummary';

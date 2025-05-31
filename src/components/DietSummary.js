@@ -214,7 +214,7 @@ const DietSummary = ({ userProfile, mealPlan, onReset }) => {
     
     const recs = generateRecommendations(nutrition, calculatedNeeds);
     setRecommendations(recs);
-  }, [userProfile, mealPlan]);
+  }, [userProfile, mealPlan, calculateDailyCalorieNeeds, calculateNutrition, generateRecommendations]);
   
   const calculateMacroPercentage = (macroNutrient, calories) => {
     if (calories === 0) return 0;
